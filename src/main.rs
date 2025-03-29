@@ -1,3 +1,5 @@
+use std::fs::create_dir;
+
 use chrono::FixedOffset;
 use eyre::{Result, eyre};
 use forensic_adb::{AndroidStorageInput, Host, UnixPathBuf};
@@ -5,6 +7,17 @@ use forensic_adb::{AndroidStorageInput, Host, UnixPathBuf};
 #[tokio::main]
 async fn main() -> Result<()> {
     color_eyre::install()?;
+    create_dir("./test-data")?;
+    for i in 1..4000 {
+        std::fs::File::create(format!("./test-data/{i}.txt"))?;
+    }
+    create_dir("./test-data-directories")?;
+    for i in 1..2000 {
+        create_dir(format!("./test-data-directories/{i}"))?;
+        std::fs::File::create(format!("./test-data-directories/{i}/{i}.txt"))?;
+    }
+
+    // return Ok(());
 
     let host = Host::default();
 
@@ -16,7 +29,7 @@ async fn main() -> Result<()> {
         .await?;
     println!("Selected device: {:?}", device);
     // FIXME: Set directory to list here, doesn't work on /storage/emulated/0 as a base because of invalid characters, so use a subfolder
-    let start_directory = "/storage/emulated/0/Movies";
+    let start_directory = "/storage/emulated/0/Documents/test-data-directories";
     let mut current_directory = UnixPathBuf::from(start_directory);
 
     let now = std::time::Instant::now();
