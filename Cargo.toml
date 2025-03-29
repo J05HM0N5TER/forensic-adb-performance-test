@@ -1,0 +1,11 @@
+[package]
+name = "forensic-adb-performance-test"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+forensic-adb = "~0.8.1"
+color-eyre = "~0.6"
+eyre = "~0.6"
+tokio = { version = "~1.44", features = ["full"] }
+chrono = "~0.4"
